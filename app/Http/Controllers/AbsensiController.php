@@ -9,31 +9,70 @@ class AbsensiController extends Controller
 {
     public function index()
     {
-        $absensi = Absensi::all(); // ambil data dari database
+        $absensi = Absensi::orderBy('tanggal', 'desc')->get();
         return view('absensi.index', compact('absensi'));
     }
 
-    // Method untuk menyimpan data absensi
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
-            'id_pegawai' => 'required|integer',
-            'tanggal'    => 'required|date',
-            'masuk'      => 'required|date_format:H:i',
-            'keluar'     => 'nullable|date_format:H:i',
-            'status'     => 'required|string|max:50',
+            'id_pegawai'   => 'required|integer',
+            'tanggal'      => 'required|date',
+            'jam_masuk'    => 'required|date_format:H:i',
+            'jam_keluar'   => 'nullable|date_format:H:i',
+            'status'       => 'required|string|max:50',
+            'keterangan'   => 'nullable|string|max:255',
+            'sumber_input' => 'required|in:manual,otomatis',
         ]);
 
-        // Simpan data ke dalam tabel absensi
         Absensi::create([
-            'id_pegawai' => $request->id_pegawai,
-            'tanggal'    => $request->tanggal,
-            'masuk'      => $request->masuk,
-            'keluar'     => $request->keluar, // bisa null
-            'status'     => $request->status,
+            'id_pegawai'   => $request->id_pegawai,
+            'tanggal'      => $request->tanggal,
+            'jam_masuk'    => $request->jam_masuk,
+            'jam_keluar'   => $request->jam_keluar,
+            'status'       => $request->status,
+            'keterangan'   => $request->keterangan,
+            'sumber_input' => $request->sumber_input,
         ]);
 
         return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil ditambahkan!');
+    }
+
+    public function edit($id)
+    {
+        $absensi = Absensi::findOrFail($id);
+        return response()->json($absensi);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'id_pegawai'   => 'required|integer',
+            'tanggal'      => 'required|date',
+            'jam_masuk'    => 'required|date_format:H:i',
+            'jam_keluar'   => 'nullable|date_format:H:i',
+            'status'       => 'required|string|max:50',
+            'keterangan'   => 'nullable|string|max:255',
+            'sumber_input' => 'required|in:manual,otomatis',
+        ]);
+
+        $absensi = Absensi::findOrFail($id);
+        $absensi->update([
+            'id_pegawai'   => $request->id_pegawai,
+            'tanggal'      => $request->tanggal,
+            'jam_masuk'    => $request->jam_masuk,
+            'jam_keluar'   => $request->jam_keluar,
+            'status'       => $request->status,
+            'keterangan'   => $request->keterangan,
+            'sumber_input' => $request->sumber_input,
+        ]);
+
+        return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil diperbarui!');
+    }
+
+    public function destroy($id)
+    {
+        Absensi::destroy($id);
+        return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil dihapus!');
     }
 }

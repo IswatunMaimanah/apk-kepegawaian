@@ -9,16 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('penggajian', function (Blueprint $table) {
-            $table->id();
-            $table->string('id_penggajian')->unique();
-            $table->string('id_pegawai');
+            $table->id('id_penggajian');
+            $table->unsignedBigInteger('id_pegawai');
             $table->string('bulan');
             $table->string('tahun');
-            $table->text('status');
+            $table->integer('gaji_pokok');
+            $table->integer('tunjangan');
+            $table->integer('potongan');
+            $table->integer('total_gaji');
             $table->timestamps();
+
+            // Foreign key mengacu ke tabel pegawai
+            $table->foreign('id_pegawai')->references('id_pegawai')->on('pegawai')->onDelete('cascade');
         });
     }
 

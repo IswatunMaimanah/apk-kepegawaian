@@ -10,8 +10,6 @@ class Pegawai extends Model
     protected $primaryKey = 'id_pegawai';
     public $incrementing = true;
     public $keyType = 'int';
-
-    // Ini tidak wajib, tapi untuk memastikan timestamp berjalan dengan baik
     public $timestamps = true;
 
     protected $fillable = [
@@ -22,7 +20,10 @@ class Pegawai extends Model
         'email',
         'jabatan',
     ];
+
+    // Relasi ke tabel penggajian
+    public function penggajian()
+    {
+        return $this->hasMany(Penggajian::class, 'pegawai_id', 'id_pegawai');
+    }
 }
-
-
-

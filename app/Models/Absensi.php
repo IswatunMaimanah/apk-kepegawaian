@@ -6,19 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Absensi extends Model
 {
-    // Tentukan nama tabel yang digunakan
-    protected $table = 'absensi';  
+    protected $table = 'absensi';
 
-    // Tentukan kolom yang boleh diisi (Mass Assignment)
     protected $fillable = [
         'id_pegawai',
         'tanggal',
-        'masuk',
-        'keluar',
+        'jam_masuk',
+        'jam_keluar',
         'status',
+        'keterangan',
+        'sumber_input',
     ];
 
-    // Tentukan kolom waktu yang otomatis diset oleh Laravel (created_at, updated_at)
     public $timestamps = true;
-}
 
+    public function pegawai()
+    {
+        return $this->belongsTo(Pegawai::class, 'id_pegawai');
+    }
+}
