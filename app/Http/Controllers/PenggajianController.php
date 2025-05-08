@@ -18,7 +18,7 @@ class PenggajianController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_pegawai' => 'required|exists:pegawai,id_pegawai',
+            'id_pegawai' => 'required|exists:pegawai,id_pegawai', // diperbaiki di sini
             'periode' => 'required|date_format:Y-m',
             'gaji_pokok' => 'required|numeric',
             'tunjangan' => 'required|numeric',

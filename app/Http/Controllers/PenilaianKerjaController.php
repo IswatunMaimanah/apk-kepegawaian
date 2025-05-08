@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class PenilaianKerjaController extends Controller
 {
-    // Menampilkan semua data penilaian
     public function index()
     {
         $penilaiankerja = PenilaianKerja::with('pegawai')->get();
@@ -16,7 +15,6 @@ class PenilaianKerjaController extends Controller
         return view('penilaiankerja.index', compact('penilaiankerja', 'pegawai'));
     }
 
-    // Menyimpan data penilaian baru
     public function store(Request $request)
     {
         $request->validate([
@@ -31,7 +29,6 @@ class PenilaianKerjaController extends Controller
         $nilai_total = ($request->nilai_disiplin + $request->nilai_produktivitas + $request->nilai_kerjasama) / 3;
 
         PenilaianKerja::create([
-            'id_penilaian' => 'PN-' . uniqid(),
             'id_pegawai' => $request->id_pegawai,
             'periode' => $request->periode,
             'nilai_disiplin' => $request->nilai_disiplin,
@@ -44,7 +41,6 @@ class PenilaianKerjaController extends Controller
         return redirect()->route('penilaian_kerja.index')->with('success', 'Data penilaian kerja berhasil ditambahkan.');
     }
 
-    // Menampilkan form edit
     public function edit($id)
     {
         $penilaian = PenilaianKerja::findOrFail($id);
@@ -52,7 +48,6 @@ class PenilaianKerjaController extends Controller
         return view('penilaiankerja.edit', compact('penilaian', 'pegawai'));
     }
 
-    // Mengupdate data penilaian
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -80,7 +75,6 @@ class PenilaianKerjaController extends Controller
         return redirect()->route('penilaian_kerja.index')->with('success', 'Data penilaian kerja berhasil diperbarui.');
     }
 
-    // Menghapus data penilaian
     public function destroy($id)
     {
         $penilaian = PenilaianKerja::findOrFail($id);

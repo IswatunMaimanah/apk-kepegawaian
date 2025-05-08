@@ -146,7 +146,7 @@
             </a>
         </li>
 
-        <li class="{{ request()->routeIs('laporan.index') ? 'active' : '' }}">
+        <li class="{{ Request::is('laporan') ? 'active' : '' }}">
             <a href="{{ route('laporan.index') }}">
                 <i class="fas fa-file-alt"></i> Rekap Laporan Bulanan
             </a>

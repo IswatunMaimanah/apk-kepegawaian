@@ -44,8 +44,8 @@ class PegawaiController extends Controller
     // Menampilkan data pegawai untuk diedit
     public function edit($id)
     {
-        $pegawai = Pegawai::findOrFail($id);
-        return response()->json($pegawai); // Mengirimkan data pegawai dalam bentuk JSON
+        $pegawai = Pegawai::where('id_pegawai', $id)->firstOrFail();
+        return response()->json($pegawai);
     }
 
     // Mengupdate data pegawai
@@ -60,7 +60,7 @@ class PegawaiController extends Controller
             'jabatan'       => 'required',
         ]);
 
-        $pegawai = Pegawai::findOrFail($id);
+        $pegawai = Pegawai::where('id_pegawai', $id)->firstOrFail();
 
         $pegawai->update([
             'nama_pegawai'  => $request->nama_pegawai,
@@ -77,7 +77,7 @@ class PegawaiController extends Controller
     // Menghapus data pegawai
     public function destroy($id)
     {
-        $pegawai = Pegawai::findOrFail($id);
+        $pegawai = Pegawai::where('id_pegawai', $id)->firstOrFail();
         $pegawai->delete();
 
         return redirect()->route('pegawai.index')->with('success', 'Data pegawai berhasil dihapus!');

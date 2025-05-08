@@ -8,7 +8,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('penilaian_kerja', function (Blueprint $table) {
-            $table->id();
+            // Mengubah id_penilaian menjadi auto-increment
+            $table->id('id_penilaian'); // Ini setara dengan $table->bigIncrements('id_penilaian');
             $table->unsignedBigInteger('id_pegawai');
             $table->string('periode');
             $table->integer('nilai_disiplin');

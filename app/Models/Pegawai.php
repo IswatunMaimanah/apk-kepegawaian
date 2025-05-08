@@ -21,9 +21,9 @@ class Pegawai extends Model
         'jabatan',
     ];
 
-    // Relasi ke tabel penggajian
+    // ✅ Perbaikan nama foreign key
     public function penggajian()
     {
-        return $this->hasMany(Penggajian::class, 'pegawai_id', 'id_pegawai');
+        return $this->hasMany(Penggajian::class, 'id_pegawai', 'id_pegawai');
     }
 }

@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('penggajian', function (Blueprint $table) {
             $table->id('id_penggajian');
             $table->unsignedBigInteger('id_pegawai');
-            $table->string('bulan');
-            $table->string('tahun');
+            $table->string('periode');
             $table->integer('gaji_pokok');
             $table->integer('tunjangan');
             $table->integer('potongan');
             $table->integer('total_gaji');
+            $table->string('status');
             $table->timestamps();
 
             // Foreign key mengacu ke tabel pegawai
