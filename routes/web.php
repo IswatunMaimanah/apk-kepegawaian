@@ -25,7 +25,7 @@ Route::get('/absensi/{id}/edit', [AbsensiController::class, 'edit'])->name('abse
 Route::put('/absensi/{id}', [AbsensiController::class, 'update'])->name('absensi.update');
 Route::delete('/absensi/{id}', [AbsensiController::class, 'destroy'])->name('absensi.destroy');
 
-// Route baru untuk Penggajian
+// Route baru untuk Penggajian  
 Route::get('/penggajian', [PenggajianController::class, 'index'])->name('penggajian.index');
 Route::post('/penggajian', [PenggajianController::class, 'store'])->name('penggajian.store');
 Route::get('/penggajian/{id}/edit', [PenggajianController::class, 'edit'])->name('penggajian.edit');
@@ -41,4 +41,18 @@ Route::put('/penilaian_kerja/{id}', [PenilaianKerjaController::class, 'update'])
 Route::delete('/penilaian_kerja/{id}', [PenilaianKerjaController::class, 'destroy'])->name('penilaian_kerja.destroy');
 
 Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+Route::get('/laporan/unduh', [LaporanController::class, 'unduhPDF'])->name('laporan.unduh.pdf');
 
+
+//auth login logout
+//use App\Http\Controllers\AuthController;
+
+//Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
+//Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+//Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+//Route::middleware('auth')->group(function () {
+    //Route::get('/welcome', function () {
+        //return "Selamat datang, " . auth()->user()->name;
+    //});
+//});

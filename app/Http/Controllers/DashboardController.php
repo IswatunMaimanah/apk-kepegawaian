@@ -23,15 +23,15 @@ class DashboardController extends Controller
         $alpha = Absensi::where('tanggal', $tanggalHariIni)->where('status', 'alpha')->count();
 
         // Gaji bulan ini
-        $bulan = Carbon::now()->format('m');
-        $tahun = Carbon::now()->format('Y');
-        $gajiBelum = Penggajian::where('bulan', $bulan)->where('tahun', $tahun)->where('status', 'belum')->count();
-        $gajiSudah = Penggajian::where('bulan', $bulan)->where('tahun', $tahun)->where('status', 'sudah')->count();
+        $periode = Carbon::now()->format('Y-m');
+        $gajiBelum = Penggajian::where('periode', $periode)->where('status', 'belum')->count();
+        $gajiSudah = Penggajian::where('periode', $periode)->where('status', 'sudah')->count();
 
-        return view('dashboard', compact(
+        return view('welcome', compact(
             'totalPegawai',
             'hadir', 'izin', 'sakit', 'alpha',
-            'gajiBelum', 'gajiSudah'
+            'gajiBelum', 'gajiSudah',
+            'periode' // tambahkan ini
         ));
     }
 }

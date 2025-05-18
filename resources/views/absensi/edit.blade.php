@@ -24,9 +24,14 @@
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label for="id_pegawai" class="block font-medium">ID Pegawai</label>
-                <input type="number" name="id_pegawai" id="id_pegawai" class="w-full border p-2 rounded" value="{{ old('id_pegawai', $absensi->id_pegawai) }}" required>
+                <select name="id_pegawai" id="id_pegawai" class="w-full border p-2 rounded" required>
+                    @foreach($pegawai as $p)
+                        <option value="{{ $p->id_pegawai }}" {{ old('id_pegawai', $absensi->id_pegawai) == $p->id_pegawai ? 'selected' : '' }}>
+                            {{ $p->nama_pegawai }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
-
             <div>
                 <label for="tanggal" class="block font-medium">Tanggal</label>
                 <input type="date" name="tanggal" id="tanggal" class="w-full border p-2 rounded" value="{{ old('tanggal', $absensi->tanggal) }}" required>

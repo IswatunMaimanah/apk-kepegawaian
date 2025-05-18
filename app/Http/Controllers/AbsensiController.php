@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absensi;
+use App\Models\Pegawai;
 use Illuminate\Http\Request;
 
 class AbsensiController extends Controller
 {
     public function index()
     {
-        $absensi = Absensi::orderBy('tanggal', 'desc')->get();
-        return view('absensi.index', compact('absensi'));
+        $absensi = Absensi::orderBy('id', 'asc')->get(); // urut ID dari kecil ke besar
+        $pegawai = Pegawai::all();
+        return view('absensi.index', compact('absensi', 'pegawai')); // kirim dua-duanya ke view
     }
 
     public function store(Request $request)
@@ -41,7 +43,8 @@ class AbsensiController extends Controller
     public function edit($id)
     {
         $absensi = Absensi::findOrFail($id);
-        return response()->json($absensi);
+        $pegawai = Pegawai::orderBy('nama_pegawai')->get();
+        return view('absensi.edit', compact('absensi', 'pegawai'));
     }
 
     public function update(Request $request, $id)
