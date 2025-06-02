@@ -15,23 +15,26 @@ class DashboardController extends Controller
         // Jumlah pegawai
         $totalPegawai = Pegawai::count();
 
-        // Kehadiran hari ini
+        // Tanggal hari ini
         $tanggalHariIni = Carbon::today()->toDateString();
+
+        // Kehadiran hari ini
         $hadir = Absensi::where('tanggal', $tanggalHariIni)->where('status', 'hadir')->count();
+        $terlambat = Absensi::where('tanggal', $tanggalHariIni)->where('status', 'terlambat')->count();
         $izin = Absensi::where('tanggal', $tanggalHariIni)->where('status', 'izin')->count();
         $sakit = Absensi::where('tanggal', $tanggalHariIni)->where('status', 'sakit')->count();
         $alpha = Absensi::where('tanggal', $tanggalHariIni)->where('status', 'alpha')->count();
 
         // Gaji bulan ini
-        $bulan = Carbon::now()->format('m');
-        $tahun = Carbon::now()->format('Y');
-        $gajiBelum = Penggajian::where('bulan', $bulan)->where('tahun', $tahun)->where('status', 'belum')->count();
-        $gajiSudah = Penggajian::where('bulan', $bulan)->where('tahun', $tahun)->where('status', 'sudah')->count();
+        $periode = Carbon::now()->format('Y-m');
+        $gajiBelum = Penggajian::where('periode', $periode)->where('status', 'belum')->count();
+        $gajiSudah = Penggajian::where('periode', $periode)->where('status', 'sudah')->count();
 
-        return view('dashboard', compact(
+        return view('welcome', compact(
             'totalPegawai',
-            'hadir', 'izin', 'sakit', 'alpha',
-            'gajiBelum', 'gajiSudah'
+            'hadir', 'terlambat', 'izin', 'sakit', 'alpha',
+            'gajiBelum', 'gajiSudah',
+            'periode'
         ));
     }
 }

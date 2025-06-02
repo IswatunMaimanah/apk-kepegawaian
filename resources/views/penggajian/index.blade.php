@@ -28,7 +28,7 @@
                         <select name="id_pegawai" class="w-full border p-2 rounded" required>
                             <option value="">-- Pilih Pegawai --</option>
                             @foreach($pegawai as $peg)
-                                <option value="{{ $peg->id }}">{{ $peg->nama_pegawai }}</option>
+                                <option value="{{ $peg->id_pegawai }}">{{ $peg->nama_pegawai }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -87,7 +87,7 @@
         <tbody>
             @forelse($penggajian as $p)
                 <tr>
-                    <td class="border p-2">{{ $p->id }}</td>
+                    <td class="border p-2">{{ $p->id_penggajian }}</td>
                     <td class="border p-2">{{ $p->pegawai->nama_pegawai ?? 'Tidak Diketahui' }}</td>
                     <td class="border p-2">{{ $p->periode }}</td>
                     <td class="border p-2">Rp {{ number_format($p->gaji_pokok, 0, ',', '.') }}</td>
@@ -96,13 +96,18 @@
                     <td class="border p-2 font-bold">Rp {{ number_format($p->total_gaji, 0, ',', '.') }}</td>
                     <td class="border p-2">{{ ucfirst($p->status) }}</td>
                     <td class="border p-2">
-                        <form action="{{ route('penggajian.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Hapus data ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
+    <div class="flex gap-1">
+        <a href="{{ route('penggajian.edit', $p->id_penggajian) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
+            Edit
+        </a>
+        <form action="{{ route('penggajian.destroy', $p->id_penggajian) }}" method="POST" onsubmit="return confirm('Hapus data ini?')">
+            @csrf
+            @method('DELETE')
+            <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">Hapus</button>
+        </form>
+    </div>
+</td>
+
             @empty
                 <tr>
                     <td colspan="9" class="border p-2 text-center text-gray-600">Tidak ada data penggajian</td>
@@ -114,7 +119,12 @@
 
 <script>
     function toggleModal() {
-        document.getElementById('modal').classList.toggle('hidden');
+        const modal = document.getElementById('modal');
+        if (modal.classList.contains('hidden')) {
+            modal.classList.remove('hidden');
+        } else {
+            modal.classList.add('hidden');
+        }
     }
 
     function unformatCurrency(str) {
@@ -142,5 +152,13 @@
             hitungTotal();
         });
     });
+
+    document.querySelector('form').addEventListener('submit', function () {
+        document.querySelectorAll('.uang').forEach(input => {
+            input.value = unformatCurrency(input.value);
+        });
+    });
+
+    window.addEventListener('load', hitungTotal);
 </script>
 @endsection

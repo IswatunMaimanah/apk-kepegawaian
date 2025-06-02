@@ -16,6 +16,7 @@
         </button>
     </div>
 
+    {{-- Modal Tambah Data --}}
     <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
         <div class="bg-white p-6 rounded shadow-md w-1/2">
             <h2 class="text-xl font-bold mb-4">Tambah Data Absensi</h2>
@@ -23,8 +24,13 @@
                 @csrf
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label>ID Pegawai:</label>
-                        <input type="number" name="id_pegawai" class="w-full border p-2 rounded" required>
+                        <label>Nama Pegawai:</label>
+                        <select name="id_pegawai" class="w-full border p-2 rounded" required>
+                            <option value="">-- Pilih Pegawai --</option>
+                            @foreach($pegawai as $p)
+                                <option value="{{ $p->id_pegawai }}">{{ $p->nama_pegawai }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div>
                         <label>Tanggal:</label>
@@ -40,7 +46,11 @@
                     </div>
                     <div>
                         <label>Status:</label>
-                        <input type="text" name="status" class="w-full border p-2 rounded" required>
+                        <select name="status" class="w-full border p-2 rounded" required>
+                            <option value="">-- Pilih Status --</option>
+                            <option value="Hadir">Hadir</option>
+                            <option value="Terlambat">Terlambat</option>
+                        </select>
                     </div>
                     <div>
                         <label>Keterangan:</label>
@@ -62,11 +72,12 @@
         </div>
     </div>
 
-    <table class="table-auto w-full border-collapse border border-gray-400">
+    {{-- Tabel Rekap --}}
+    <table class="table-auto w-full border-collapse border border-gray-400 mt-4">
         <thead class="bg-blue-300">
             <tr>
                 <th class="border p-2">ID Absensi</th>
-                <th class="border p-2">ID Pegawai</th>
+                <th class="border p-2">Nama Pegawai</th>
                 <th class="border p-2">Tanggal</th>
                 <th class="border p-2">Jam Masuk</th>
                 <th class="border p-2">Jam Keluar</th>
@@ -79,7 +90,7 @@
             @forelse($absensi as $a)
                 <tr>
                     <td class="border p-2">{{ $a->id }}</td>
-                    <td class="border p-2">{{ $a->id_pegawai }}</td>
+                    <td class="border p-2">{{ $a->pegawai->nama_pegawai ?? 'Tidak ditemukan' }}</td>
                     <td class="border p-2">{{ $a->tanggal }}</td>
                     <td class="border p-2">{{ $a->jam_masuk }}</td>
                     <td class="border p-2">{{ $a->jam_keluar ?? 'Belum Keluar' }}</td>
@@ -89,7 +100,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8" class="border p-2 text-center text-white">Tidak ada data absensi</td>
+                    <td colspan="8" class="border p-2 text-center text-gray-700">Tidak ada data absensi</td>
                 </tr>
             @endforelse
         </tbody>

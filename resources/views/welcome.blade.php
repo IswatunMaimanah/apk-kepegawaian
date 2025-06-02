@@ -1,66 +1,25 @@
 @extends('layouts.app')
 
+@section('page_title', 'Dashboard')
+
 @section('content')
-<div class="container">
-    <h2>Dashboard</h2>
-    <div class="row mt-4">
-
-        {{-- Card Statistik --}}
-        <div class="col-md-3">
-            <div class="card bg-primary text-white mb-3">
-                <div class="card-body">
-                    <h5>Total Pegawai</h5>
-                    <h3>{{ $totalPegawai }}</h3>
-                </div>
-            </div>
+<div class="container mx-auto">
+    {{-- Baris pertama: Statistik --}}
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-blue-600 text-white p-5 rounded-lg shadow">
+            <h5 class="text-lg font-semibold">Total Pegawai</h5>
+            <h3 class="text-3xl mt-2 font-bold">{{ $totalPegawai }}</h3>
         </div>
 
-        <div class="col-md-3">
-            <div class="card bg-success text-white mb-3">
-                <div class="card-body">
-                    <h5>Hadir Hari Ini</h5>
-                    <h3>{{ $hadir }}</h3>
-                </div>
-            </div>
+        <div class="bg-green-600 text-white p-5 rounded-lg shadow">
+            <h5 class="text-lg font-semibold">Hadir Hari Ini</h5>
+            <h3 class="text-3xl mt-2 font-bold">{{ $hadir }}</h3>
         </div>
 
-        <div class="col-md-3">
-            <div class="card bg-warning text-dark mb-3">
-                <div class="card-body">
-                    <h5>Izin</h5>
-                    <h3>{{ $izin }}</h3>
-                </div>
-            </div>
+        <div class="bg-yellow-400 text-black p-5 rounded-lg shadow">
+            <h5 class="text-lg font-semibold">Terlambat Hari Ini</h5>
+            <h3 class="text-3xl mt-2 font-bold">{{ $terlambat }}</h3>
         </div>
-
-        <div class="col-md-3">
-            <div class="card bg-danger text-white mb-3">
-                <div class="card-body">
-                    <h5>Alpha</h5>
-                    <h3>{{ $alpha }}</h3>
-                </div>
-            </div>
-        </div>
-
-        {{-- Gaji --}}
-        <div class="col-md-6">
-            <div class="card bg-secondary text-white mb-3">
-                <div class="card-body">
-                    <h5>Gaji Bulan Ini - Belum Dibayar</h5>
-                    <h3>{{ $gajiBelum }}</h3>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card bg-info text-white mb-3">
-                <div class="card-body">
-                    <h5>Gaji Bulan Ini - Sudah Dibayar</h5>
-                    <h3>{{ $gajiSudah }}</h3>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 @endsection

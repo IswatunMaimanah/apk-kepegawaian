@@ -2,9 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>@yield('title', 'Dashboard')</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Tambahkan Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
@@ -85,6 +84,8 @@
             padding: 8px 15px;
             text-decoration: none;
             font-weight: bold;
+            border: none;
+            cursor: pointer;
         }
 
         .profile {
@@ -112,7 +113,8 @@
 <div class="sidebar">
     <div class="profile">
         <div class="avatar"></div>
-        <div class="username">Regina</div>
+        {{-- Tampilkan nama user yang login --}}
+        <div class="username">{{ Auth::user()->name }}</div>
     </div>
     <div class="nav-section">Menu Navigasi</div>
     <ul>
@@ -157,8 +159,15 @@
 <div class="main">
     <div class="header">
         <h1>@yield('page_title', 'Dashboard')</h1>
-        <a href="#" class="logout">LOGOUT</a>
+
+        @if (Request::is('welcome'))
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="logout">LOGOUT</button>
+            </form>
+        @endif
     </div>
+
     @yield('content')
 </div>
 

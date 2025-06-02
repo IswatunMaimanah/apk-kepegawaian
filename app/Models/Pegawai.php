@@ -24,6 +24,16 @@ class Pegawai extends Model
     // ✅ Perbaikan nama foreign key
     public function penggajian()
     {
-        return $this->hasMany(Penggajian::class, 'id_pegawai', 'id_pegawai');
+        return $this->hasMany(\App\Models\Penggajian::class, 'id_pegawai', 'id_pegawai');
     }
+    public function penilaianKerja()
+    {
+        return $this->hasMany(\App\Models\PenilaianKerja::class, 'id_pegawai', 'id_pegawai');
+    }
+    public function absensi()
+    {
+        return $this->hasMany(\App\Models\Absensi::class, 'id_pegawai', 'id_pegawai');
+    }
+
+
 }
