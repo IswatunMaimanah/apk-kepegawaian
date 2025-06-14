@@ -6,23 +6,44 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        body {
+        html, body {
             margin: 0;
+            padding: 0;
+            height: 100%;
             font-family: 'Segoe UI', sans-serif;
+        }
+
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
         }
 
         .sidebar {
             width: 250px;
             background: #2e2e2e;
-            height: 100vh;
-            float: left;
             color: white;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
         }
 
-        .sidebar h2 {
-            margin: 20px;
-            font-size: 24px;
-            color: #fff;
+        .sidebar .profile {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .sidebar .avatar {
+            width: 50px;
+            height: 50px;
+            background: #ddd;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .sidebar .username {
+            font-size: 20px;
+            font-weight: bold;
         }
 
         .sidebar .nav-section {
@@ -33,6 +54,8 @@
         .sidebar ul {
             list-style: none;
             padding: 0;
+            margin: 0;
+            flex-grow: 1;
         }
 
         .sidebar ul li {
@@ -62,20 +85,20 @@
             text-align: center;
         }
 
+        .main {
+            flex: 1;
+            background: #4773EE;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
         .header {
             background: #7496F4;
-            padding: 10px;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .main {
-            margin-left: 250px;
-            background: #4773EE;
-            height: 100vh;
-            color: black;
-            padding: 20px;
         }
 
         .logout {
@@ -88,87 +111,81 @@
             cursor: pointer;
         }
 
-        .profile {
-            display: flex;
-            align-items: center;
+        .content {
+            flex: 1;
             padding: 20px;
-        }
-
-        .avatar {
-            width: 50px;
-            height: 50px;
-            background: #ddd;
-            border-radius: 50%;
-            margin-right: 15px;
-        }
-
-        .username {
-            font-size: 20px;
-            font-weight: bold;
+            overflow-y: auto;
         }
     </style>
 </head>
 <body>
 
-<div class="sidebar">
-    <div class="profile">
-        <div class="avatar"></div>
-        {{-- Tampilkan nama user yang login --}}
-        <div class="username">{{ Auth::user()->name }}</div>
-    </div>
-    <div class="nav-section">Menu Navigasi</div>
-    <ul>
-        <li class="{{ Request::is('welcome') ? 'active' : '' }}">
-            <a href="{{ route('welcome.index') }}">
-                <i class="fas fa-home"></i> Dashboard
-            </a>
-        </li>
+<div class="wrapper">
 
-        <li class="{{ Request::is('pegawai') ? 'active' : '' }}">
-            <a href="{{ route('pegawai.index') }}">
-                <i class="fas fa-users"></i> Manajemen Data Pegawai
-            </a>
-        </li>
+    {{-- Sidebar --}}
+    <div class="sidebar">
+        <div class="profile">
+            <div class="avatar"></div>
+            <div class="username">{{ Auth::user()->name }}</div>
+        </div>
+        <div class="nav-section">Menu Navigasi</div>
+        <ul>
+            <li class="{{ Request::is('welcome') ? 'active' : '' }}">
+                <a href="{{ route('welcome.index') }}">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+            </li>
 
-        <li class="{{ Request::is('absensi') ? 'active' : '' }}">
-            <a href="{{ route('absensi.index') }}">
-                <i class="fas fa-calendar-check"></i> Absensi
-            </a>
-        </li>
+            <li class="{{ Request::is('pegawai') ? 'active' : '' }}">
+                <a href="{{ route('pegawai.index') }}">
+                    <i class="fas fa-users"></i> Manajemen Data Pegawai
+                </a>
+            </li>
 
-        <li class="{{ Request::is('penggajian') ? 'active' : '' }}">
-            <a href="{{ route('penggajian.index') }}">
-                <i class="fas fa-money-bill-wave"></i> Informasi Penggajian
-            </a>
-        </li>
+            <li class="{{ Request::is('absensi') ? 'active' : '' }}">
+                <a href="{{ route('absensi.index') }}">
+                    <i class="fas fa-calendar-check"></i> Absensi
+                </a>
+            </li>
 
-        <li class="{{ Request::is('penilaian_kerja') ? 'active' : '' }}">
-            <a href="{{ route('penilaian_kerja.index') }}">
-                <i class="fas fa-chart-line"></i> Penilaian Kinerja Pegawai
-            </a>
-        </li>
+            <li class="{{ Request::is('penggajian') ? 'active' : '' }}">
+                <a href="{{ route('penggajian.index') }}">
+                    <i class="fas fa-money-bill-wave"></i> Informasi Penggajian
+                </a>
+            </li>
 
-        <li class="{{ Request::is('laporan') ? 'active' : '' }}">
-            <a href="{{ route('laporan.index') }}">
-                <i class="fas fa-file-alt"></i> Rekap Laporan Bulanan
-            </a>
-        </li>
-    </ul>
-</div>
+            <li class="{{ Request::is('penilaian_kerja') ? 'active' : '' }}">
+                <a href="{{ route('penilaian_kerja.index') }}">
+                    <i class="fas fa-chart-line"></i> Penilaian Kinerja Pegawai
+                </a>
+            </li>
 
-<div class="main">
-    <div class="header">
-        <h1>@yield('page_title', 'Dashboard')</h1>
-
-        @if (Request::is('welcome'))
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="logout">LOGOUT</button>
-            </form>
-        @endif
+            <li class="{{ Request::is('laporan') ? 'active' : '' }}">
+                <a href="{{ route('laporan.index') }}">
+                    <i class="fas fa-file-alt"></i> Rekap Laporan Bulanan
+                </a>
+            </li>
+        </ul>
     </div>
 
-    @yield('content')
+    {{-- Main Area --}}
+    <div class="main">
+        <div class="header">
+            <h1>@yield('page_title', 'Dashboard')</h1>
+
+            @if (Request::is('welcome'))
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="logout">LOGOUT</button>
+                </form>
+            @endif
+        </div>
+
+        <div class="content">
+            @yield('content')
+        </div>
+    </div>
+
 </div>
 
 </body>

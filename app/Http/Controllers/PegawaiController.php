@@ -8,73 +8,83 @@ use Illuminate\Support\Facades\Log;
 
 class PegawaiController extends Controller
 {
-    // Menampilkan semua pegawai
-    public function index()
+    public function index(Request $request)
     {
-        $pegawai = Pegawai::all();
-        return view('pegawai.index', compact('pegawai'));
+        $query = Pegawai::query();
+
+        // Filter pencarian nama
+        if ($request->filled('search')) {
+            $query->where('nama_pegawai', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter jenis kelamin
+        if ($request->filled('jk')) {
+            $query->where('jk', $request->jk);
+        }
+
+        // Filter jabatan
+        if ($request->filled('jabatan')) {
+            $query->where('jabatan', $request->jabatan);
+        }
+
+        // Ambil data unik untuk dropdown filter jabatan
+        $list_jabatan = Pegawai::select('jabatan')->distinct()->pluck('jabatan');
+
+        // Ambil data pegawai
+        $pegawai = $query->get();
+
+        return view('pegawai.index', compact('pegawai', 'list_jabatan'));
     }
 
-    // Menyimpan data pegawai baru
     public function store(Request $request)
     {
         $request->validate([
-            'nama_pegawai'  => 'required|string|max:255',
-            'jk'            => 'required',
-            'ttl'           => 'required',
-            'no_hp'         => 'required',
-            'email'         => 'required|email',
-            'jabatan'       => 'required',
+            'nama_pegawai' => 'required|string|max:255',
+            'jk'           => 'required',
+            'ttl'          => 'required|date',
+            'no_hp'        => ['required', 'regex:/^(\+62|08)[0-9]{9,13}$/'],
+            'email'        => 'required|email',
+            'jabatan'      => 'required',
+        ], [
+            'no_hp.regex' => 'Format No HP harus diawali dengan +62 atau 08 dan terdiri dari 12 hingga 15 digit.',
         ]);
 
-        $pegawai = Pegawai::create([
-            'nama_pegawai'  => $request->nama_pegawai,
-            'jk'            => $request->jk,
-            'ttl'           => $request->ttl,
-            'no_hp'         => $request->no_hp,
-            'email'         => $request->email,
-            'jabatan'       => $request->jabatan,
-        ]);
+        $pegawai = Pegawai::create($request->only([
+            'nama_pegawai', 'jk', 'ttl', 'no_hp', 'email', 'jabatan'
+        ]));
 
         Log::info('Data Pegawai Disimpan:', $pegawai->toArray());
 
         return redirect()->route('pegawai.index')->with('success', 'Data pegawai berhasil ditambahkan!');
     }
 
-    // Menampilkan data pegawai untuk diedit
     public function edit($id)
     {
         $pegawai = Pegawai::where('id_pegawai', $id)->firstOrFail();
         return response()->json($pegawai);
     }
 
-    // Mengupdate data pegawai
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_pegawai'  => 'required|string|max:255',
-            'jk'            => 'required',
-            'ttl'           => 'required',
-            'no_hp'         => 'required',
-            'email'         => 'required|email',
-            'jabatan'       => 'required',
+            'nama_pegawai' => 'required|string|max:255',
+            'jk'           => 'required',
+            'ttl'          => 'required|date',
+            'no_hp'        => ['required', 'regex:/^(\+62|08)[0-9]{9,13}$/'],
+            'email'        => 'required|email',
+            'jabatan'      => 'required',
+        ], [
+            'no_hp.regex' => 'Format No HP harus diawali dengan +62 atau 08 dan terdiri dari 12 hingga 15 digit.',
         ]);
 
         $pegawai = Pegawai::where('id_pegawai', $id)->firstOrFail();
-
-        $pegawai->update([
-            'nama_pegawai'  => $request->nama_pegawai,
-            'jk'            => $request->jk,
-            'ttl'           => $request->ttl,
-            'no_hp'         => $request->no_hp,
-            'email'         => $request->email,
-            'jabatan'       => $request->jabatan,
-        ]);
+        $pegawai->update($request->only([
+            'nama_pegawai', 'jk', 'ttl', 'no_hp', 'email', 'jabatan'
+        ]));
 
         return redirect()->route('pegawai.index')->with('success', 'Data pegawai berhasil diperbarui!');
     }
 
-    // Menghapus data pegawai
     public function destroy($id)
     {
         $pegawai = Pegawai::where('id_pegawai', $id)->firstOrFail();

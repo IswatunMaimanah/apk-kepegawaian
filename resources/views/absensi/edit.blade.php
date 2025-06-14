@@ -39,20 +39,23 @@
 
             <div>
                 <label for="jam_masuk" class="block font-medium">Jam Masuk</label>
-                <input type="time" name="jam_masuk" id="jam_masuk" class="w-full border p-2 rounded" value="{{ old('jam_masuk', $absensi->jam_masuk) }}" required>
+                <input type="time" name="jam_masuk" id="jam_masuk" class="w-full border p-2 rounded" value="{{ old('jam_masuk', \Carbon\Carbon::parse($absensi->jam_masuk)->format('H:i')) }}" required>
             </div>
 
             <div>
                 <label for="jam_keluar" class="block font-medium">Jam Keluar</label>
-                <input type="time" name="jam_keluar" id="jam_keluar" class="w-full border p-2 rounded" value="{{ old('jam_keluar', $absensi->jam_keluar) }}">
+                <input type="time" name="jam_keluar" id="jam_keluar" class="w-full border p-2 rounded" value="{{ old('jam_keluar', $absensi->jam_keluar ? \Carbon\Carbon::parse($absensi->jam_keluar)->format('H:i') : '') }}">
             </div>
 
             <div>
                 <label for="status" class="block font-medium">Status</label>
                 <select name="status" id="status" class="w-full border p-2 rounded" required>
                     <option value="">-- Pilih Status --</option>
-                    <option value="Hadir" {{ old('status', $absensi->status) == 'Hadir' ? 'selected' : '' }}>Hadir</option>
-                    <option value="Terlambat" {{ old('status', $absensi->status) == 'Terlambat' ? 'selected' : '' }}>Terlambat</option>
+                    <option value="hadir" {{ old('status', $absensi->status) == 'hadir' ? 'selected' : '' }}>Hadir</option>
+                    <option value="terlambat" {{ old('status', $absensi->status) == 'terlambat' ? 'selected' : '' }}>Terlambat</option>
+                    <option value="sakit" {{ old('status', $absensi->status) == 'sakit' ? 'selected' : '' }}>Sakit</option>
+                    <option value="izin" {{ old('status', $absensi->status) == 'izin' ? 'selected' : '' }}>Izin</option>
+                    <option value="alpha" {{ old('status', $absensi->status) == 'alpha' ? 'selected' : '' }}>Alpha</option>
                 </select>
             </div>
 

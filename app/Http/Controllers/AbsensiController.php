@@ -8,15 +8,38 @@ use Illuminate\Http\Request;
 
 class AbsensiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $absensi = Absensi::orderBy('id', 'asc')->get(); // urut ID dari kecil ke besar
+        $query = Absensi::query()->with('pegawai');
+
+        if ($request->filled('nama')) {
+            $query->whereHas('pegawai', function ($q) use ($request) {
+                $q->where('nama_pegawai', 'like', '%' . $request->nama . '%');
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('sumber_input')) {
+            $query->where('sumber_input', $request->sumber_input);
+        }
+
+        $absensi = $query->orderBy('id', 'asc')->get();
         $pegawai = Pegawai::all();
-        return view('absensi.index', compact('absensi', 'pegawai')); // kirim dua-duanya ke view
+
+        return view('absensi.index', compact('absensi', 'pegawai'));
     }
 
     public function store(Request $request)
     {
+        // Potong detik kalau ada
+        $request->merge([
+            'jam_masuk' => substr($request->jam_masuk, 0, 5),
+            'jam_keluar' => $request->jam_keluar ? substr($request->jam_keluar, 0, 5) : null,
+        ]);
+
         $request->validate([
             'id_pegawai'   => 'required|integer',
             'tanggal'      => 'required|date',
@@ -27,15 +50,7 @@ class AbsensiController extends Controller
             'sumber_input' => 'required|in:manual,otomatis',
         ]);
 
-        Absensi::create([
-            'id_pegawai'   => $request->id_pegawai,
-            'tanggal'      => $request->tanggal,
-            'jam_masuk'    => $request->jam_masuk,
-            'jam_keluar'   => $request->jam_keluar,
-            'status'       => $request->status,
-            'keterangan'   => $request->keterangan,
-            'sumber_input' => $request->sumber_input,
-        ]);
+        Absensi::create($request->all());
 
         return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil ditambahkan!');
     }
@@ -49,6 +64,12 @@ class AbsensiController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Potong detik dari waktu
+        $request->merge([
+            'jam_masuk' => substr($request->jam_masuk, 0, 5),
+            'jam_keluar' => $request->jam_keluar ? substr($request->jam_keluar, 0, 5) : null,
+        ]);
+
         $request->validate([
             'id_pegawai'   => 'required|integer',
             'tanggal'      => 'required|date',
@@ -60,15 +81,7 @@ class AbsensiController extends Controller
         ]);
 
         $absensi = Absensi::findOrFail($id);
-        $absensi->update([
-            'id_pegawai'   => $request->id_pegawai,
-            'tanggal'      => $request->tanggal,
-            'jam_masuk'    => $request->jam_masuk,
-            'jam_keluar'   => $request->jam_keluar,
-            'status'       => $request->status,
-            'keterangan'   => $request->keterangan,
-            'sumber_input' => $request->sumber_input,
-        ]);
+        $absensi->update($request->all());
 
         return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil diperbarui!');
     }
